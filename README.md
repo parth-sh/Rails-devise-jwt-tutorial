@@ -14,6 +14,11 @@ rails g scaffold home -T
 bin/rake db:migrate
 ```
 
+## changing development port
+```
+port ENV.fetch("PORT") { 8080 }
+```
+
 ## Setting up testing framework
 ```
 skipping it
@@ -62,6 +67,7 @@ Depending on your application's configuration some manual setup may be required:
      * Not required *
 
 ===============================================================================
+config.action_mailer.default_url_options = { host: 'localhost', port: 8080 }
 rails g devise user  
 rails db:migrate
 ```
