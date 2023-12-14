@@ -1,6 +1,6 @@
-# Development proccess
+# Development process
 
-## Project initialization
+### Project initialization
 https://guides.rubyonrails.org/api_app.html
 ```
 rails new backend-api -T -d postgresql --api
@@ -8,23 +8,28 @@ bin/rails db:create
 bin/rake db:migrate
 ```
 
-## Generate scaffold for home
+### Generate scaffold for home
 ```
 rails g scaffold home -T
 bin/rake db:migrate
 ```
 
-## changing development port
+### changing development port
 ```
 port ENV.fetch("PORT") { 8080 }
 ```
 
-## Setting up testing framework
+### Setting up testing framework
 ```
 skipping it
 ```
 
-## User authentication
+### Changing Development Port
+```
+config.action_mailer.default_url_options = { host: 'localhost', port: 8080 }
+```
+
+### User authentication
 ```
 gem 'devise'
 bundle install
@@ -67,7 +72,20 @@ Depending on your application's configuration some manual setup may be required:
      * Not required *
 
 ===============================================================================
-config.action_mailer.default_url_options = { host: 'localhost', port: 8080 }
-rails g devise user  
+```
+```
+rails g devise user
+invoke  active_record
+create    db/migrate/20231214191203_devise_create_users.rb
+create    app/models/user.rb
+insert    app/models/user.rb
+route  devise_for :users
+```
+```
 rails db:migrate
 ```
+
+## Code
+
+YT-6: Setting-up-users-api-endpoint: Created users_controller, inside api folder, defined show method, fixed routes
+
