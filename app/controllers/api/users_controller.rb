@@ -6,7 +6,16 @@ module Api
       @user = User.find(params[:id])
       render json: @user
     rescue ActiveRecord::RecordNotFound => e
-      render json: { error: e.message }, status: 404
+      render json: { error: e.message }, status: :not_found
+    end
+
+    def find_by_email
+      @user = User.find_by(email: params[:email])
+      if @user
+        render json: @user
+      else
+        render json: { error: 'User not found' }, status: :not_found
+      end
     end
 
   end

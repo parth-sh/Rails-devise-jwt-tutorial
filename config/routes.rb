@@ -11,6 +11,11 @@ Rails.application.routes.draw do
   root "homes#index"
 
   namespace :api do
-    resources :users, only: [:show]
+    resources :users, only: [:show] do
+      collection do
+        get 'find_by_email', to: 'users#find_by_email'
+      end
+    end
   end
+
 end

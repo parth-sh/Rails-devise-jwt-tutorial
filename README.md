@@ -89,3 +89,8 @@ rails db:migrate
 
 YT-6: Setting-up-users-api-endpoint: Created users_controller, inside api folder, defined show method, fixed routes
 
+YT-7: Adding find_by_email method, Added find_by_email to users collections route,
+
+YT-8: Added rack-cors to project, configured the CORS middleware in config/initializers/cors.rb
+
+YT-9: Adding error message to login form
