@@ -330,8 +330,8 @@ end
 Now we create a controller, and add a method
 
 ```rb
-class CurrentUserController < ApplicationController
-  before_action :authenticate_user!
+class UsersController < ApplicationController
+  before_action :authenticate_user!, :except => [:find_by_email]
   def index
     render json: current_user, status: :ok
   end
