@@ -2,6 +2,11 @@
 
 module Api
   class UsersController < ApplicationController
+    before_action :authenticate_user!, :except => [:find_by_email]
+    def index
+      render json: current_user, status: :ok
+    end
+
     def show
       @user = User.find(params[:id])
       render json: @user
