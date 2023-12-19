@@ -1,4 +1,4 @@
-A tutorial on setting up an authentication system for a Rails backend API using Devise and Devise-JWT gems.
+This project will be built around the concept of a student accommodation platform, employing Next.js for the frontend and Ruby on Rails for the backend. Prompt engineering with the OpenAI GPT-4 model will utilized to expedite the coding process for both the frontend and backend, enhancing development speed. The entire project will be designed, developed, and deployed significantly aided by the use of an AI-powered coding chatbot.
 
 ## Setting up rails server
 
@@ -12,7 +12,7 @@ bin/rails db:create
 bin/rake db:migrate
 ```
 
--T flag denotes
+-T flag denotes 
 ```-T, [--skip-test-unit], [--no-skip-test-unit]          # Skip Test::Unit files```
 
 As we will be working with a frontend application too, changing the development port to 8080
@@ -30,7 +30,7 @@ config.action_mailer.default_url_options = { host: 'localhost', port: 8080 }
 It also a good idea to change the action mailer port to 8080
 
 
-## Setting up authentication
+## Setting up authentication 
 
 Thanks to the guide [Rails Devise JWT Tutorial](https://github.com/DakotaLMartinez/rails-devise-jwt-tutorial)
 
@@ -64,25 +64,6 @@ end
 ```
 
 Here, we can see that there should be an "Authorization" header exposed which will be used to dispatch and receive JWT tokens in Auth headers.
-
-### Using Session Middlewares
-
-https://guides.rubyonrails.org/api_app.html#using-session-middlewares
-
-The following middlewares, used for session management, are excluded from API apps since they normally don't need sessions. If one of your API clients is a browser, you might want to add one of these back in:
-
-```rb
-# config/application.rb
-
-# This also configures session_options for use below
-config.session_store :cookie_store, key: '_interslice_session'
-
-# Required for all session management (regardless of session_store)
-config.middleware.use ActionDispatch::Cookies
-
-config.middleware.use config.session_store, config.session_options
-```
-
 
 ### Add the needed Gems
 
@@ -330,8 +311,8 @@ end
 Now we create a controller, and add a method
 
 ```rb
-class UsersController < ApplicationController
-  before_action :authenticate_user!, :except => [:find_by_email]
+class CurrentUserController < ApplicationController
+  before_action :authenticate_user!
   def index
     render json: current_user, status: :ok
   end
@@ -340,23 +321,79 @@ end
 
 Adding the `before_action :authenticate_user` will ensure that we only see a 200 response if we have a valid JWT in the headers. If we don't this endpoint should return a `401` status code.
 
+Finally, it’s done
+
 ---
 
+## Testing
 
 
+While testing from postman, its forcing us to use seesions, for that there is a solution
+
+This is a bug with devise which is not solved yet:
+
+### Disabling session store
+
+https://github.com/waiting-for-dev/devise-jwt/issues/235#issuecomment-1453383251
 
 
+Centrally configure store: false, instead of overwriting each methods separately that might need it:
+
+```rb
+#config/initializers/devise.rb
+Devise.setup do |config|
+  # ... other config
+  
+  config.warden do |warden|
+    warden.scope_defaults :user, store: false  # <---- This will use the config even if it's not passed to the method opts
+    warden.scope_defaults :admin, store: false # <---- You need to configure it for each scope you need it for
+    # you might also want to overwrite the FailureApp in this section
+  end
+end
+```
+
+This way you don't need to hack the session store in rack, it's enough to disable it altogether (if you don't use an api_only application already):
+
+```rb
+# config/application.rb
+module YourApp
+  class Application < Rails::Application
+    # ... other config
+    
+    config.session_store :disabled
+  end
+end
+```
+
+### users/registrations#create
 
 
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/2y2th0xdgrlxv1vj0c23.png)
 
+In headers we can see, we got our authorization token
 
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/gm9u65ucndxwuvn8z9fe.png)
 
+and body as
 
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/92bkroa3tiyrddpnlgvp.png)
 
+### users/sessions#create
 
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/fcac6sgxe0a2b9aaixdp.png)
 
+We got our JWT token
 
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/at7ni2xl03ysocer32ze.png)
 
+### api/users#index
 
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/3opvlmcaei5qzd213855.png)
 
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/ju4fpwunjc5szws1waec.png)
 
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/00b4a9tdoqgd4vpaulzf.png)
+
+### users/sessions#destroy
+
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/bqskb14sy92gdl5gppnz.png)
