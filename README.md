@@ -1,4 +1,4 @@
-This project will be built around the concept of a student accommodation platform, employing Next.js for the frontend and Ruby on Rails for the backend. Prompt engineering with the OpenAI GPT-4 model will utilized to expedite the coding process for both the frontend and backend, enhancing development speed. The entire project will be designed, developed, and deployed significantly aided by the use of an AI-powered coding chatbot.
+Created a tutorial on setting up an authentication system based on JWT tokens for Rails backend API using Devise and Devise-JWT gems.
 
 ## Setting up rails server
 
